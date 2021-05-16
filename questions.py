@@ -1,7 +1,10 @@
+import math
+
 import nltk
 import sys
 import string
 import os
+nltk.download('stopwords')
 
 FILE_MATCHES = 1
 SENTENCE_MATCHES = 1
@@ -83,7 +86,18 @@ def compute_idfs(documents):
     Any word that appears in at least one of the documents should be in the
     resulting dictionary.
     """
-    raise NotImplementedError
+    idfs_map = dict()
+    total_documents = len(documents)
+    for document in documents:
+        word_list = documents[document]
+        word_set = set(word_list)
+        for word in word_set:
+            doc_count = 0
+            for d in documents:
+                if word in documents[d]:
+                    doc_count += 1
+            idfs_map[word] = math.log(total_documents / doc_count)
+    return idfs_map
 
 
 def top_files(query, files, idfs, n):
