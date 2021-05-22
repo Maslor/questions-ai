@@ -104,10 +104,25 @@ def top_files(query, files, idfs, n):
     """
     Given a `query` (a set of words), `files` (a dictionary mapping names of
     files to a list of their words), and `idfs` (a dictionary mapping words
-    to their IDF values), return a list of the filenames of the the `n` top
+    to their IDF values), return a list of the filenames of the `n` top
     files that match the query, ranked according to tf-idf.
     """
-    raise NotImplementedError
+    files_ranking_map = dict()
+
+    for file_name in files.keys():
+        file_content = files.get(file_name)
+        tf_id = 0
+        for word in query:
+            tf = file_content.count(word)
+            tf_id = tf_id + tf * idfs.get(word)
+        files_ranking_map[tf_id] = file_name
+
+    sorted_files_by_descending_rank = sorted(files_ranking_map, reverse=True)
+    n_best_files = []
+
+    for i in range(0, n):
+        n_best_files.append(files_ranking_map.get(sorted_files_by_descending_rank[i]))
+    return n_best_files
 
 
 def top_sentences(query, sentences, idfs, n):
