@@ -133,7 +133,23 @@ def top_sentences(query, sentences, idfs, n):
     the query, ranked according to idf. If there are ties, preference should
     be given to sentences that have a higher query term density.
     """
-    raise NotImplementedError
+    ranking_map = dict()
+
+    for sentence in sentences.keys():
+        set_sentence_words = set(sentences.get(sentence))
+        density = len(query.intersection(set_sentence_words)) / len(set_sentence_words)
+        score = 0
+        for word in query.intersection(set_sentence_words):
+            if word in idfs.keys():
+                score = score + idfs.get(word)
+        ranking_map[score, density] = sentence
+
+    sorted_files_by_descending_rank = sorted(ranking_map, reverse=True)
+    n_best_files = []
+
+    for i in range(0, n):
+        n_best_files.append(ranking_map.get(sorted_files_by_descending_rank[i]))
+    return n_best_files
 
 
 if __name__ == "__main__":
