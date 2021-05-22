@@ -4,6 +4,7 @@ import nltk
 import sys
 import string
 import os
+
 nltk.download('stopwords')
 
 FILE_MATCHES = 1
@@ -11,7 +12,6 @@ SENTENCE_MATCHES = 1
 
 
 def main():
-
     # Check command-line arguments
     if len(sys.argv) != 2:
         sys.exit("Usage: python questions.py corpus")
@@ -61,7 +61,6 @@ def load_files(directory):
     return mapping
 
 
-
 def tokenize(document):
     """
     Given a document (represented as a string), return a list of all of the
@@ -71,11 +70,13 @@ def tokenize(document):
     punctuation or English stopwords.
     """
 
-    tokens = nltk.word_tokenize(document.lower().translate(str.maketrans('', '', string.punctuation)))
-    for token in tokens:
-        if not token.isalpha() or len(token) < 1 or token in nltk.corpus.stopwords.words("english"):
-            tokens.remove(token)
-    return tokens
+    filtered_tokens = []
+
+    for token in nltk.word_tokenize(document.lower()):
+        if token not in nltk.corpus.stopwords.words("english") and token not in string.punctuation:
+            filtered_tokens.append(token)
+
+    return filtered_tokens
 
 
 def compute_idfs(documents):
@@ -149,6 +150,7 @@ def get_n_highest_keys(dictionary, n):
     for i in range(0, n):
         n_best_files.append(dictionary.get(sorted_files_by_descending_rank[i]))
     return n_best_files
+
 
 if __name__ == "__main__":
     main()
