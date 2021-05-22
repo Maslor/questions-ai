@@ -132,7 +132,7 @@ def top_sentences(query, sentences, idfs, n):
 
     for sentence in sentences.keys():
         set_sentence_words = set(sentences.get(sentence))
-        density = len(query.intersection(set_sentence_words)) / len(set_sentence_words)
+        density = len(query.intersection(set_sentence_words)) / len(sentences.get(sentence))
         score = 0
         for word in query.intersection(set_sentence_words):
             if word in idfs.keys():
