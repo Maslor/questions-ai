@@ -117,12 +117,7 @@ def top_files(query, files, idfs, n):
             tf_id = tf_id + tf * idfs.get(word)
         files_ranking_map[tf_id] = file_name
 
-    sorted_files_by_descending_rank = sorted(files_ranking_map, reverse=True)
-    n_best_files = []
-
-    for i in range(0, n):
-        n_best_files.append(files_ranking_map.get(sorted_files_by_descending_rank[i]))
-    return n_best_files
+    return get_n_highest_keys(files_ranking_map, n)
 
 
 def top_sentences(query, sentences, idfs, n):
@@ -144,13 +139,16 @@ def top_sentences(query, sentences, idfs, n):
                 score = score + idfs.get(word)
         ranking_map[score, density] = sentence
 
-    sorted_files_by_descending_rank = sorted(ranking_map, reverse=True)
+    return get_n_highest_keys(ranking_map, n)
+
+
+def get_n_highest_keys(dictionary, n):
+    sorted_files_by_descending_rank = sorted(dictionary, reverse=True)
     n_best_files = []
 
     for i in range(0, n):
-        n_best_files.append(ranking_map.get(sorted_files_by_descending_rank[i]))
+        n_best_files.append(dictionary.get(sorted_files_by_descending_rank[i]))
     return n_best_files
-
 
 if __name__ == "__main__":
     main()
